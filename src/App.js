@@ -99,11 +99,10 @@ const Search = ({
         onChange={onChange}
         />
         <button type="submit">
-          {children}
         </button>
       </form>
 
-const Table = ({ list, onDismiss }) =>
+const table = ({ list, onDismiss }) =>
         <div className="table">
           {list.map(item =>
             <div key={item.objectID}>
@@ -118,7 +117,7 @@ const Table = ({ list, onDismiss }) =>
                   Delete
                 </button>
               </span>
-              );
-            } 
+              </div>
+              )} 
             </div>
 export default App;

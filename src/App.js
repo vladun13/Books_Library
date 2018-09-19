@@ -20,11 +20,27 @@ class App extends Component {
 
     this.setSearchTopBooks = this.setSearchTopBooks.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
+    this.fetchSearchTopBooks = this.fetchSearchTopBooks.bind(this);
+    this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
   }
 
+      fetchSearchTopBooks(searchTerm) {
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
+    .then(response => response.json())
+    .then(result => this.setSearchTopBooks(result))
+    .catch(error => error);
+    }
+
+
   setSearchTopBooks(result) {
     this.setState({ result });
+  }
+
+  onSearchSubmit(event) {
+  const { searchTerm } = this.state;
+  this.fetchSearchTopBooks(searchTerm);
+  event.preventDefault();
   }
 
   componentDidMount() {
@@ -32,7 +48,7 @@ class App extends Component {
 
     fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
       .then(response => response.json())
-      .then(result => this.setSearchTopStories(result))
+      .then(result => this.setSearchTopBooks(result))
       .catch(error => error);
   }
 
@@ -42,29 +58,69 @@ class App extends Component {
 
   onDismiss(id) {
     const isNotId = item => item.objectID !== id;
-    const updatedList = this.state.list.filter(isNotId);
-    this.setState({ list: updatedList });
+    const updatedBooks = this.state.result.books.filter(isNotId);
+    this.setState({ 
+      result: {...this.state.result, books: updatedBooks}
+     });
   }
 
   render() {
     const { searchTerm, result } = this.state;
+    if (!result) { return null; }
     return (
-      <div className="App">
-        <Search
-          value = {searchTerm}
-          onChange = {this.onSearchChange}
-        />
-        { result
-          ? <Table
-          list={result.hits}
-          pattern={searchTerm}
-          onDismiss={this.onDismiss}
+      <div className="page">
+          <div className='interactions'>
+            <Search>
+              value = {searchTerm}
+              onChange = {this.onSearchChange}
+              onSubmit = {this.onSearchSubmit}>
+              Search
+            </Search>
+          </div>
+        { result &&
+          <Table
+            list={result.books}
+            onDismiss={this.onDismiss}
           />
-          : null
           }
       </div>
     );
   }
 }
+
+const Search = ({
+  value,
+  onChange,
+  onSubmit,
+  children
+}) => 
+  <form onSubmit={onSubmit}>
+    <input type="text"
+    value={value}
+    onChange={onChange}
+    />
+    <button type="submit">
+      {children}
+    </button>
+  </form>
+
+const Table = ({ list, onDismiss }) =>
+ <div className="table">
+  {list.map(item => 
+      <div key={item.objectID}>
+          <span>
+              <a href={item.url}>{item.title}</a>
+          </span>
+          <span>{item.author}</span>
+          <span>{item.num_comments}</span>
+          <span>{item.points}</span>
+          <span>
+            <button onClick={() => onDismiss(item.objectID)} type="button">
+              Delete
+            </button>
+          </span>
+        </div>
+    )}
+ </div>
 
 export default App;

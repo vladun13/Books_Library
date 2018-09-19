@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import Table from './components/Table'
-import Search from './components/Search'
 
 const DEFAULT_QUERY = '';
 const PATH_BASE = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -89,38 +88,35 @@ class App extends Component {
 }
 
 const Search = ({
-  value,
-  onChange,
-  onSubmit,
-  children
-}) => 
-  <form onSubmit={onSubmit}>
-    <input type="text"
-    value={value}
-    onChange={onChange}
-    />
-    <button type="submit">
-      {children}
-    </button>
-  </form>
+      value,
+      onChange,
+      onSubmit,
+      children
+    }) => 
+      <form onSubmit={onSubmit}>
+        <input type="text"
+        value={value}
+        onChange={onChange}
+        />
+        <button type="submit">
+          {children}
+        </button>
+      </form>
 
 const Table = ({ list, onDismiss }) =>
- <div className="table">
-  {list.map(item => 
-      <div key={item.objectID}>
-          <span>
-              <a href={item.url}>{item.title}</a>
-          </span>
-          <span>{item.author}</span>
-          <span>{item.num_comments}</span>
-          <span>{item.points}</span>
-          <span>
-            <button onClick={() => onDismiss(item.objectID)} type="button">
-              Delete
-            </button>
-          </span>
-        </div>
-    )}
- </div>
-
+        <div className="table">
+          {list.map(item =>
+            <div key={item.objectID}>
+              <span>
+                  <a href={item.url}>{item.title}</a>
+              </span>
+              <span>{item.author}</span>
+              <span>{item.num_comments}</span>
+              <span>{item.points}</span>
+              <span>
+                <button onClick={() => onDismiss(item.objectID)} type="button">
+                  Delete
+                </button>
+              </span>
+            </div>
 export default App;

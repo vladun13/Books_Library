@@ -118,5 +118,7 @@ const Table = ({ list, onDismiss }) =>
                   Delete
                 </button>
               </span>
+              );
+            } 
             </div>
 export default App;

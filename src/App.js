@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import Popup from './components/Popup.jsx';
 
 const DEFAULT_QUERY = '';
 const PATH_BASE = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -14,7 +15,9 @@ class App extends Component {
     this.state = {
       result: null,
       searchTerm: "DEFAULT_QUERY",
+      isOpen: false
     };
+
 
     this.setSearchTopBooks = this.setSearchTopBooks.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
@@ -22,6 +25,19 @@ class App extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
   }
+
+    openPopup = () => {
+    this.setState({
+      isOpen: true
+    });
+  }
+
+  closePopup = () => {
+    this.setState({
+      isOpen: false
+    });
+  }
+
 
       fetchSearchTopBooks(searchTerm) {
     fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
@@ -61,8 +77,6 @@ class App extends Component {
       result: {...this.state.result, books: updatedBooks}
      });
   }
-
-
 
 
   render() {
@@ -113,9 +127,11 @@ const Table = ({ list, onDismiss }) =>
               <span className="authors">{item.volumeInfo.authors} <br/></span>
               <span className="publDate">{item.volumeInfo.publishedDate} <br/></span>
               <span className="title">{item.volumeInfo.title} <br/></span>
-              <button onClick={() => onDismiss(item.objectID)} type="button">
-                Add book
+              <button onClick={this.openPopup} type="button">
+                Edit
               </button>
+              <Popup show={this.state.isOpen}
+              onClose={this.closePopup} />
               </div>
               )} 
             </div>

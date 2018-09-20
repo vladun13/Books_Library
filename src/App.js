@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import Table from './components/Table'
 
 const DEFAULT_QUERY = '';
 const PATH_BASE = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -63,6 +62,9 @@ class App extends Component {
      });
   }
 
+
+
+
   render() {
     const { searchTerm, result } = this.state;
     if (!result) { return null; }
@@ -78,7 +80,7 @@ class App extends Component {
           </div>
         { result &&
           <Table
-            list={result.books}
+            list={result.items}
             onDismiss={this.onDismiss}
           />
           }
@@ -99,19 +101,18 @@ const Search = ({
         onChange={onChange}
         />
         <button type="submit">
+          children
         </button>
       </form>
 
-const table = ({ list, onDismiss }) =>
+
+const Table = ({ list, onDismiss }) =>
         <div className="table">
           {list.map(item =>
-            <div key={item.objectID}>
-              <span>
-                  <a href={item.url}>{item.title}</a>
-              </span>
-              <span>{item.author}</span>
-              <span>{item.num_comments}</span>
-              <span>{item.points}</span>
+            <div key={item.id}>
+              <span>{item.volumeInfo.authors}</span>
+              <span>{item.volumeInfo.publishedDate}</span>
+              <span>{item.volumeInfo.title}</span>
               <span>
                 <button onClick={() => onDismiss(item.objectID)} type="button">
                   Delete

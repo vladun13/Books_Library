@@ -101,7 +101,7 @@ const Search = ({
         onChange={onChange}
         />
         <button type="submit">
-          children
+          Search
         </button>
       </form>
 
@@ -109,15 +109,13 @@ const Search = ({
 const Table = ({ list, onDismiss }) =>
         <div className="table">
           {list.map(item =>
-            <div key={item.id}>
-              <span>{item.volumeInfo.authors}</span>
-              <span>{item.volumeInfo.publishedDate}</span>
-              <span>{item.volumeInfo.title}</span>
-              <span>
-                <button onClick={() => onDismiss(item.objectID)} type="button">
-                  Delete
-                </button>
-              </span>
+            <div key={item.id} className="books_info">
+              <span className="authors">{item.volumeInfo.authors} <br/></span>
+              <span className="publDate">{item.volumeInfo.publishedDate} <br/></span>
+              <span className="title">{item.volumeInfo.title} <br/></span>
+              <button onClick={() => onDismiss(item.objectID)} type="button">
+                Add book
+              </button>
               </div>
               )} 
             </div>

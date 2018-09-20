@@ -1,28 +1,35 @@
-.App {
+body {
+  font-family: arial;
+}
+
+
+form {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+
+input {
+  margin-right: 10px;
+}
+
+.table {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 10px;
+  width: 100%; 
+}
+
+.table span {
+  margin: 10px;
+  padding: 5px;
+}
+
+.books_info {
+  width: 30%;
   text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  border: 1px solid black;
+  margin: 10px;
+  padding: 5px;
 }

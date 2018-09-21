@@ -15,7 +15,6 @@ class App extends Component {
     this.state = {
       result: null,
       searchTerm: "DEFAULT_QUERY",
-      isOpen: false
     };
 
 
@@ -24,18 +23,6 @@ class App extends Component {
     this.fetchSearchTopBooks = this.fetchSearchTopBooks.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
-  }
-
-    openPopup = () => {
-    this.setState({
-      isOpen: true
-    });
-  }
-
-  closePopup = () => {
-    this.setState({
-      isOpen: false
-    });
   }
 
 
@@ -72,9 +59,9 @@ class App extends Component {
 
   onDismiss(id) {
     const isNotId = item => item.objectID !== id;
-    const updatedBooks = this.state.result.books.filter(isNotId);
+    const updatedBooks = this.state.result.items.filter(isNotId);
     this.setState({ 
-      result: {...this.state.result, books: updatedBooks}
+      result: {...this.state.result, items: updatedBooks}
      });
   }
 
@@ -120,8 +107,24 @@ const Search = ({
       </form>
 
 
-const Table = ({ list, onDismiss }) =>
-        <div className="table">
+class Table extends Component {
+  constructor(){
+    super();
+    this.state = {isOpen: false}
+    openPopup = () => {
+          this.setState({
+            isOpen: true
+          });
+          }
+          closePopup = () => {
+          this.setState({
+            isOpen: false
+          });
+          }
+  };
+      render(){
+        return(
+          <div className="table">
           {list.map(item =>
             <div key={item.id} className="books_info">
               <span className="authors">{item.volumeInfo.authors} <br/></span>
@@ -131,8 +134,13 @@ const Table = ({ list, onDismiss }) =>
                 Edit
               </button>
               <Popup show={this.state.isOpen}
-              onClose={this.closePopup} />
+              onClose={this.closePopup}>        
+              </Popup>
               </div>
               )} 
             </div>
+          )}
+        }
+      
+          
 export default App;

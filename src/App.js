@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Popup from './components/Popup.jsx';
+import Popup from './components/modal/Popup.jsx';
 
 const DEFAULT_QUERY = '';
 const PATH_BASE = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -107,40 +107,41 @@ const Search = ({
       </form>
 
 
-class Table extends Component {
-  constructor(){
-    super();
-    this.state = {isOpen: false}
-    openPopup = () => {
-          this.setState({
-            isOpen: true
-          });
-          }
-          closePopup = () => {
-          this.setState({
-            isOpen: false
-          });
-          }
-  };
-      render(){
-        return(
-          <div className="table">
+const Table = ({ list, onDismiss }) =>
+        <div className="table">
           {list.map(item =>
             <div key={item.id} className="books_info">
               <span className="authors">{item.volumeInfo.authors} <br/></span>
               <span className="publDate">{item.volumeInfo.publishedDate} <br/></span>
               <span className="title">{item.volumeInfo.title} <br/></span>
-              <button onClick={this.openPopup} type="button">
-                Edit
-              </button>
-              <Popup show={this.state.isOpen}
-              onClose={this.closePopup}>        
-              </Popup>
+              <div>
+                <label>
+                    Enter text to edit the book fields:
+                </label>
+                <input className="form-control"
+                    type="text" 
+                    value={ this.state.text }
+                    onChange={ e => this.setText(e.target.value) }
+                />
+                <p>
+                    <button className="btn btn-primary" onClick={e => this.openPopup() } type="button" >
+                        Edit field
+                    </button>
+                </p>
               </div>
-              )} 
+                  <div>
+                    <Popup>
+                      <div className="alert alert-success">
+                          <h2>
+                              { this.state.text}
+                          </h2>
+                          <button className="btn btn-warning" onClick={e => this.closePopup() } type="button" >
+                              Save changes
+                          </button>
+                      </div>
+                    </Popup>
+                  </div>
+              </div>
+              )};
             </div>
-          )}
-        }
-      
-          
 export default App;

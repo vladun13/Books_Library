@@ -110,12 +110,14 @@ const Search = ({
 class Table extends Component {
     constructor(props){
       super(props);
-
+      this.state = {text: '', 
+      isPopupShown: false}
     }
       render(){
         return(
           <div className="table">
-            {list.map(item =>
+              {this.state.isPopupShown ? <Popup /> : null}
+              {this.props.list.map(item =>
               <div key={item.id} className="books_info">
                 <span className="authors">{item.volumeInfo.authors} <br/></span>
                 <span className="publDate">{item.volumeInfo.publishedDate} <br/></span>

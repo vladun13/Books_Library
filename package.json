@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "mdbreact": "^4.7.1",
     "popup": "0.0.3",
     "prettier": "^1.14.2",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
+    "react-modal": "^3.5.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
     "reactjs": "^1.0.0"

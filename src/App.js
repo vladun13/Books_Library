@@ -107,41 +107,50 @@ const Search = ({
       </form>
 
 
-const Table = ({ list, onDismiss }) =>
-        <div className="table">
-          {list.map(item =>
-            <div key={item.id} className="books_info">
-              <span className="authors">{item.volumeInfo.authors} <br/></span>
-              <span className="publDate">{item.volumeInfo.publishedDate} <br/></span>
-              <span className="title">{item.volumeInfo.title} <br/></span>
-              <div>
-                <label>
-                    Enter text to edit the book fields:
-                </label>
-                <input className="form-control"
-                    type="text" 
-                    value={ this.state.text }
-                    onChange={ e => this.setText(e.target.value) }
-                />
-                <p>
-                    <button className="btn btn-primary" onClick={e => this.openPopup() } type="button" >
-                        Edit field
-                    </button>
-                </p>
-              </div>
-                  <div>
-                    <Popup>
-                      <div className="alert alert-success">
-                          <h2>
-                              { this.state.text}
-                          </h2>
-                          <button className="btn btn-warning" onClick={e => this.closePopup() } type="button" >
-                              Save changes
-                          </button>
-                      </div>
-                    </Popup>
-                  </div>
-              </div>
-              )};
+class Table extends Component {
+    constructor(props){
+      super(props);
+
+    }
+      render(){
+        return(
+          <div className="table">
+            {list.map(item =>
+              <div key={item.id} className="books_info">
+                <span className="authors">{item.volumeInfo.authors} <br/></span>
+                <span className="publDate">{item.volumeInfo.publishedDate} <br/></span>
+                <span className="title">{item.volumeInfo.title} <br/></span>
+                <div>
+                  <label>
+                      Enter text to edit the book fields:
+                  </label>
+                  <input className="form-control"
+                      type="text" 
+                      value={ this.state.text }
+                      onChange={ e => this.setText(e.target.value) }
+                  />
+                  <p>
+                      <button className="btn btn-primary" onClick={e => this.openPopup() } type="button" >
+                          Edit field
+                      </button>
+                  </p>
+                </div>
+                    <div>
+                      <Popup>
+                        <div className="alert alert-success">
+                            <h2>
+                                { this.state.text}
+                            </h2>
+                            <button className="btn btn-warning" onClick={e => this.closePopup() } type="button" >
+                                Save changes
+                            </button>
+                        </div>
+                      </Popup>
+                    </div>
+                </div>
+                )};
+              }
             </div>
+          )};
+        }
 export default App;

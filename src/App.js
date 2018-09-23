@@ -113,6 +113,8 @@ class Table extends Component {
       this.state = {text: '', 
       isPopupShown: false}
     }
+      openPopup = () => this.setState({ isPopupShown: true })
+      closePopup = () => this.setState({ isPopupShown: false })
       render(){
         return(
           <div className="table">
@@ -135,23 +137,13 @@ class Table extends Component {
                       <button className="btn btn-primary" onClick={e => this.openPopup() } type="button" >
                           Edit field
                       </button>
+                      <button className="btn btn-warning" onClick={e => this.closePopup() } type="button" >
+                          Save changes
+                      </button>
                   </p>
                 </div>
-                    <div>
-                      <Popup>
-                        <div className="alert alert-success">
-                            <h2>
-                                { this.state.text}
-                            </h2>
-                            <button className="btn btn-warning" onClick={e => this.closePopup() } type="button" >
-                                Save changes
-                            </button>
-                        </div>
-                      </Popup>
-                    </div>
-                </div>
-                )};
-              }
+              </div>
+                )}
             </div>
           )};
         }

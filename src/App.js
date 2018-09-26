@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import Popup from './components/modal/Popup.jsx';
 
+import api from './api';
+
 const DEFAULT_QUERY = '';
 const PATH_BASE = 'https://www.googleapis.com/books/v1/volumes?q=';
 const PATH_SEARCH = '/search';
@@ -23,6 +25,7 @@ class App extends Component {
     this.fetchSearchTopBooks = this.fetchSearchTopBooks.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+    this.onEdit = this.onEdit.bind(this);
   }
 
 
@@ -40,6 +43,7 @@ class App extends Component {
 
   onSearchSubmit(event) {
   const { searchTerm } = this.state;
+  console.log(searchTerm);
   this.fetchSearchTopBooks(searchTerm);
   event.preventDefault();
   }
@@ -47,10 +51,12 @@ class App extends Component {
   componentDidMount() {
     const { searchTerm } = this.state;
 
-    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
-      .then(response => response.json())
-      .then(result => this.setSearchTopBooks(result))
-      .catch(error => error);
+    // fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
+    //   .then(response => response.json())
+    //   .then(result => this.setSearchTopBooks(result))
+    //   .catch(error => error);
+
+    this.setSearchTopBooks(api);
   }
 
   onSearchChange(event){
@@ -65,6 +71,24 @@ class App extends Component {
      });
   }
 
+  onEdit(items) {
+    console.log(items, this.state);
+    this.setState({
+      result: {
+        items: [
+          ...this.state.result.items.map(item => {
+            if (item.id === items.id) {
+              item.volumeInfo = {
+                ...item.volumeInfo,
+                ...items
+              };
+            }
+            return item;
+          })
+        ]
+      }
+    }, () => console.log(this.state));
+  }
 
   render() {
     const { searchTerm, result } = this.state;
@@ -72,7 +96,7 @@ class App extends Component {
     return (
       <div className="page">
           <div className='interactions'>
-            <Search>
+            <Search
               value = {searchTerm}
               onChange = {this.onSearchChange}
               onSubmit = {this.onSearchSubmit}>
@@ -83,6 +107,7 @@ class App extends Component {
           <Table
             list={result.items}
             onDismiss={this.onDismiss}
+            onEdit={this.onEdit}
           />
           }
       </div>
@@ -113,28 +138,38 @@ class Table extends Component {
       this.state = {text: '', 
       isPopupShown: false}
     }
-      openPopup = () => this.setState({ isPopupShown: true })
-      closePopup = () => this.setState({ isPopupShown: false })
+
+    onSubmit = (val) => {
+      let update = this.state.item;
+      console.log(val);
+      if(val.authors) update.authors = val.authors;
+      if(val.publishedDate) update.publishedDate = val.publishedDate;
+      if(val.title) update.title = val.title;
+      this.props.onEdit(update);
+      this.closePopup();
+    };
+      openPopup = (item) => this.setState({ isPopupShown: true, item });
+      closePopup = () => this.setState({ isPopupShown: false });
       render(){
         return(
           <div className="table">
-              {this.state.isPopupShown ? <Popup /> : null}
-              {this.props.list.map(item =>
+            {this.state.isPopupShown ? (
+              <Popup
+                item={this.state.item}
+                onClose={this.closePopup}
+                onSubmit={this.onSubmit}
+              />
+            ) : null}
+
+              {this.props.list && this.props.list.map(item =>
               <div key={item.id} className="books_info">
+
                 <span className="authors">{item.volumeInfo.authors} <br/></span>
                 <span className="publDate">{item.volumeInfo.publishedDate} <br/></span>
                 <span className="title">{item.volumeInfo.title} <br/></span>
                 <div>
-                  <label>
-                      Enter text to edit the book fields:
-                  </label>
-                  <input className="form-control"
-                      type="text" 
-                      value={ this.state.text }
-                      onChange={ e => this.setText(e.target.value) }
-                  />
                   <p>
-                      <button className="btn btn-primary" onClick={e => this.openPopup() } type="button" >
+                      <button className="btn btn-primary" onClick={e => this.openPopup(item) } type="button" >
                           Edit field
                       </button>
                       <button className="btn btn-warning" onClick={e => this.closePopup() } type="button" >

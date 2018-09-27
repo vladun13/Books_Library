@@ -1,8 +1,3 @@
-body {
-  font-family: arial;
-}
-
-
 form {
   display: flex;
   justify-content: center;
@@ -10,7 +5,7 @@ form {
 }
 
 input {
-  margin-right: 10px;
+  border-radius: 5px;
 }
 
 .table {
@@ -29,7 +24,12 @@ input {
 .books_info {
   width: 30%;
   text-align: center;
-  border: 1px solid black;
+  border: 2px solid black;
+  border-radius: 5px;
   margin: 10px;
   padding: 5px;
+}
+
+#add_new {
+  margin-left: 20px;
 }

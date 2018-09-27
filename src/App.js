@@ -4,7 +4,8 @@ import Popup from './components/modal/Popup.jsx';
 
 import api from './api';
 
-const DEFAULT_QUERY = '';
+import { Button } from 'react-bootstrap';
+
 const PATH_BASE = 'https://www.googleapis.com/books/v1/volumes?q=';
 const PATH_SEARCH = '/search';
 const PARAM_SEARCH = 'query=';
@@ -16,7 +17,7 @@ class App extends Component {
 
     this.state = {
       result: null,
-      searchTerm: "DEFAULT_QUERY",
+      placeholder:'Search',
     };
 
 
@@ -26,6 +27,7 @@ class App extends Component {
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onEdit = this.onEdit.bind(this);
+    this.onCreateNew = this.onCreateNew.bind(this);
   }
 
 
@@ -43,7 +45,6 @@ class App extends Component {
 
   onSearchSubmit(event) {
   const { searchTerm } = this.state;
-  console.log(searchTerm);
   this.fetchSearchTopBooks(searchTerm);
   event.preventDefault();
   }
@@ -51,10 +52,6 @@ class App extends Component {
   componentDidMount() {
     const { searchTerm } = this.state;
 
-    // fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
-    //   .then(response => response.json())
-    //   .then(result => this.setSearchTopBooks(result))
-    //   .catch(error => error);
 
     this.setSearchTopBooks(api);
   }
@@ -72,7 +69,6 @@ class App extends Component {
   }
 
   onEdit(items) {
-    console.log(items, this.state);
     this.setState({
       result: {
         items: [
@@ -87,8 +83,29 @@ class App extends Component {
           })
         ]
       }
-    }, () => console.log(this.state));
+    });
   }
+
+onCreateNew(item) {
+  this.setState({
+    result: {
+      ...this.state.result,
+      items: [
+        {
+          volumeInfo: {
+            ...item
+          }
+        },
+        ...this.state.result.items
+      ]
+    }
+  });
+  this.closePopup();
+}
+
+openPopup = (item) => this.setState({ isPopupShown: true });
+closePopup = () => this.setState({ isPopupShown: false });
+
 
   render() {
     const { searchTerm, result } = this.state;
@@ -102,6 +119,22 @@ class App extends Component {
               onSubmit = {this.onSearchSubmit}>
               Search
             </Search>
+            <div>
+              <Button onClick={this.openPopup} color="danger" id="add_new">Add new</Button>
+            </div>
+            {this.state.isPopupShown ? (
+              <Popup
+                item={{
+                  volumeInfo: {
+                    author: '',
+                    publishedDate: '',
+                    title: ''
+                  }
+                }}
+                onClose={this.closePopup}
+                onSubmit={this.onCreateNew}
+              />
+            ) : null}
           </div>
         { result &&
           <Table
@@ -119,16 +152,17 @@ const Search = ({
       value,
       onChange,
       onSubmit,
-      children
+      children,
     }) => 
       <form onSubmit={onSubmit}>
-        <input type="text"
-        value={value}
-        onChange={onChange}
-        />
-        <button type="submit">
+      <input
+      placeholder="search text"
+      value={value}
+      onChange={onChange}
+      />
+        <Button type="submit" color="primary">
           Search
-        </button>
+        </Button>
       </form>
 
 
@@ -141,7 +175,6 @@ class Table extends Component {
 
     onSubmit = (val) => {
       let update = this.state.item;
-      console.log(val);
       if(val.authors) update.authors = val.authors;
       if(val.publishedDate) update.publishedDate = val.publishedDate;
       if(val.title) update.title = val.title;
@@ -163,19 +196,13 @@ class Table extends Component {
 
               {this.props.list && this.props.list.map(item =>
               <div key={item.id} className="books_info">
-
                 <span className="authors">{item.volumeInfo.authors} <br/></span>
                 <span className="publDate">{item.volumeInfo.publishedDate} <br/></span>
                 <span className="title">{item.volumeInfo.title} <br/></span>
                 <div>
-                  <p>
-                      <button className="btn btn-primary" onClick={e => this.openPopup(item) } type="button" >
-                          Edit field
-                      </button>
-                      <button className="btn btn-warning" onClick={e => this.closePopup() } type="button" >
-                          Save changes
-                      </button>
-                  </p>
+                  <Button onClick={e => this.openPopup(item) } type="button" color="success" bssize="small" >
+                      Edit field
+                  </Button>
                 </div>
               </div>
                 )}
